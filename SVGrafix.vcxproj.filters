@@ -1,0 +1,116 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Resource Files\Shaders">
+      <UniqueIdentifier>{0911feac-cb53-4e29-954b-75e45a8ea501}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\SVG">
+      <UniqueIdentifier>{51ba569a-69c9-4905-9302-cb02cf8b2626}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\SVG\Parser">
+      <UniqueIdentifier>{5ca35a6c-3626-4cd1-bcec-edae9cfe1f11}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\SVG\Parser\FileSVG">
+      <UniqueIdentifier>{4486288c-c279-4505-8d3a-2513dc4a4aae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\SVG\Parser\Utility">
+      <UniqueIdentifier>{3e66561b-146f-4c8e-95e2-8da0def3a6bb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\SVG\Parser\DomSVG">
+      <UniqueIdentifier>{b7962605-4fdd-4843-a401-f6ea6fa9ce84}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="glad.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="shaderClass.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="VBO.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="EBO.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="VAO.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="FileSVG.cpp">
+      <Filter>Header Files\SVG\Parser\FileSVG</Filter>
+    </ClCompile>
+    <ClCompile Include="Utility.cpp">
+      <Filter>Header Files\SVG\Parser\Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="DomSVG.cpp">
+      <Filter>Header Files\SVG\Parser\DomSVG</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="Libraries\lib\glfw3.lib" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Libraries\include\KHR\khrplatform.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\include\glad\glad.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\include\GLFW\glfw3.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\include\GLFW\glfw3native.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="shaderClass.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="VBO.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="EBO.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="VAO.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FileSVG.h">
+      <Filter>Header Files\SVG\Parser\FileSVG</Filter>
+    </ClInclude>
+    <ClInclude Include="Utility.h">
+      <Filter>Header Files\SVG\Parser\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="DomSVG.h">
+      <Filter>Header Files\SVG\Parser\DomSVG</Filter>
+    </ClInclude>
+    <ClInclude Include="SVGElement.h">
+      <Filter>Header Files\SVG\Parser\DomSVG</Filter>
+    </ClInclude>
+    <ClInclude Include="TagTypes.h">
+      <Filter>Header Files\SVG\Parser\Utility</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="default.vert">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="default.frag">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+  </ItemGroup>
+</Project>
