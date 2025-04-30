@@ -1,4 +1,5 @@
-﻿# SVGrafix (Work in progress) 
+
+# SVGrafix (Work in progress) 
 
 A lightweight C++ SVG parser and renderer built on OpenGL.
 It reads an SVG file, constructs a simple DOM, extracts element attributes, and renders basic shapes (e.g. <rect>, <circle>) to the screen.
