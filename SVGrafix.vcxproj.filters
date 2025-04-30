@@ -42,13 +42,13 @@
     <ClCompile Include="shaderClass.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="VBO.cpp">
+    <ClCompile Include="renderer\VBO.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="EBO.cpp">
+    <ClCompile Include="renderer\EBO.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="VAO.cpp">
+    <ClCompile Include="renderer\VAO.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="FileSVG.cpp">
@@ -80,28 +80,28 @@
     <ClInclude Include="shaderClass.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="VBO.h">
+    <ClInclude Include="renderer\VBO.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="EBO.h">
+    <ClInclude Include="renderer\EBO.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="VAO.h">
+    <ClInclude Include="renderer\VAO.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="FileSVG.h">
+    <ClInclude Include="include\svgrafix\FileSVG.h">
       <Filter>Header Files\SVG\Parser\FileSVG</Filter>
     </ClInclude>
-    <ClInclude Include="Utility.h">
+    <ClInclude Include="include\svgrafix\Utility.h">
       <Filter>Header Files\SVG\Parser\Utility</Filter>
     </ClInclude>
-    <ClInclude Include="DomSVG.h">
+    <ClInclude Include="include\svgrafix\DomSVG.h">
       <Filter>Header Files\SVG\Parser\DomSVG</Filter>
     </ClInclude>
-    <ClInclude Include="SVGElement.h">
+    <ClInclude Include="include\svgrafix\SVGElement.h">
       <Filter>Header Files\SVG\Parser\DomSVG</Filter>
     </ClInclude>
-    <ClInclude Include="TagTypes.h">
+    <ClInclude Include="include\svgrafix\TagTypes.h">
       <Filter>Header Files\SVG\Parser\Utility</Filter>
     </ClInclude>
   </ItemGroup>

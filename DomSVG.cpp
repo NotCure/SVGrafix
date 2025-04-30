@@ -1,8 +1,8 @@
 ﻿#include <iostream>
 
-#include "DomSVG.h"
-#include "Utility.h"
-#include "TagTypes.h"
+#include "include/svgrafix/DomSVG.h"
+#include "include/svgrafix/Utility.h"
+#include "include/svgrafix/TagTypes.h"
 #include <iostream>
 using namespace Utility::String;
 
@@ -97,6 +97,12 @@ void DomSVG::parse()
 
             svgElem->parseAttributes(tagBody);
 
+            auto attributes = svgElem->getAllAttributes();
+            for (const auto& [key, value] : attributes) {
+                std::cout << "svg " << key << " = " << value << "\n";
+            }
+
+
             elements.emplace_back(std::move(svgElem));
            
 
@@ -108,7 +114,7 @@ void DomSVG::parse()
 
 			auto attributes = rectElem->getAllAttributes();
             for (const auto& [key, value] : attributes) {
-				std::cout << "Attribute: " << key << " = " << value << "\n";
+				std::cout << "rectangle " << key << " = " << value << "\n";
             }
 
 
@@ -128,10 +134,4 @@ void DomSVG::parse()
         pos = endPos + 1;
     }
 }
-
-
-
-
-
-
 

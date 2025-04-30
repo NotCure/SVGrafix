@@ -1,13 +1,13 @@
 ﻿#include<iostream>
 #include<glad/glad.h>
 #include<GLFW/glfw3.h>
-#include "Utility.h"
+#include "include/svgrafix/Utility.h"
 #include"shaderClass.h"
-#include"FileSVG.h"
+#include"include/svgrafix/FileSVG.h"
 
-#include"VAO.h"
-#include"VBO.h"
-#include"EBO.h"
+#include"renderer/VAO.h"
+#include"renderer/VBO.h"
+#include"renderer/EBO.h"
 
 GLfloat vertices[] =
 {

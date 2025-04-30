@@ -152,7 +152,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="DomSVG.cpp" />
-    <ClCompile Include="EBO.cpp" />
+    <ClCompile Include="renderer\EBO.cpp" />
     <ClCompile Include="FileSVG.cpp" />
     <ClCompile Include="glad.c" />
     <ClCompile Include="Main.cpp">
@@ -161,26 +161,26 @@
     </ClCompile>
     <ClCompile Include="shaderClass.cpp" />
     <ClCompile Include="Utility.cpp" />
-    <ClCompile Include="VAO.cpp" />
-    <ClCompile Include="VBO.cpp" />
+    <ClCompile Include="renderer\VAO.cpp" />
+    <ClCompile Include="renderer\VBO.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="Libraries\lib\glfw3.lib" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="DomSVG.h" />
-    <ClInclude Include="EBO.h" />
-    <ClInclude Include="FileSVG.h" />
+    <ClInclude Include="include\svgrafix\DomSVG.h" />
+    <ClInclude Include="renderer\EBO.h" />
+    <ClInclude Include="include\svgrafix\FileSVG.h" />
     <ClInclude Include="Libraries\include\glad\glad.h" />
     <ClInclude Include="Libraries\include\GLFW\glfw3.h" />
     <ClInclude Include="Libraries\include\GLFW\glfw3native.h" />
     <ClInclude Include="Libraries\include\KHR\khrplatform.h" />
     <ClInclude Include="shaderClass.h" />
-    <ClInclude Include="SVGElement.h" />
-    <ClInclude Include="TagTypes.h" />
-    <ClInclude Include="Utility.h" />
-    <ClInclude Include="VAO.h" />
-    <ClInclude Include="VBO.h" />
+    <ClInclude Include="include\svgrafix\SVGElement.h" />
+    <ClInclude Include="include\svgrafix\TagTypes.h" />
+    <ClInclude Include="include\svgrafix\Utility.h" />
+    <ClInclude Include="renderer\VAO.h" />
+    <ClInclude Include="renderer\VBO.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="default.frag" />

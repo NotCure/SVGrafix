@@ -1,4 +1,4 @@
-#include "Utility.h"
+#include "include/svgrafix/Utility.h"
 #include <filesystem>     
 #include <sstream>     
 #include <cctype>
@@ -7,7 +7,7 @@
 
 using namespace Utility;
 
-// made the code shorter by chatgpt
+// ——— Parser —————————————————————————————————————————————————————
 void Utility::Parser::parseAttributes(const std::string& tagBody, std::unordered_map<std::string, std::string>& attrs)
 {
 	size_t i = 0, n = tagBody.size();
@@ -41,7 +41,7 @@ void Utility::Parser::parseAttributes(const std::string& tagBody, std::unordered
 	}
 }
 
-
+// ——— File ——————————————————————————————————————————————————————
 std::string File::getFileContent(std::string filePath)
 {
 
@@ -89,6 +89,9 @@ std::string File::readFile(const std::string& path)
 	file.close();
 	return buffer.str();
 }
+
+// ——— String —————————————————————————————————————————————————————
+
 std::string String::convertToLowercase(const std::string& str)
 {
 	std::string lowerStr = str;
