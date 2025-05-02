@@ -1,11 +1,10 @@
 ﻿#pragma once
 
-
-
+#include "../Utility/Parser.h"
 
 #include <string>
 #include <unordered_map>
-#include "Utility.h"
+
 
 
 
@@ -15,28 +14,26 @@ public:
     virtual ~SVGElement() = default;
     virtual void draw() = 0;
 
-    void parseAttributes(const std::string& tagBody) {
-        Utility::Parser::parseAttributes(tagBody, attributes_);
+    void parseAttributes(std::string_view body) {
+        utility::parser::parse_attributes(body, attributes_);
     }
 
-    const std::string& getAttr(const std::string& name) const {
-        static const std::string empty{};
-        auto it = attributes_.find(name);
-        return it != attributes_.end() ? it->second : empty;
+    std::string_view get_attr(std::string_view name) const {
+        auto it = attributes_.find(std::string(name));
+        return (it == attributes_.end())
+            ? std::string_view{}
+        : std::string_view{ it->second };
     }
 
-    const std::unordered_map<std::string, std::string>& getAllAttributes() const {
+    const std::unordered_map<std::string, std::string>& getAttributes() const {
         return attributes_;
     }
 
-
-protected:
-    const std::unordered_map<std::string, std::string>& attributes() const {
-        return attributes_;
-    }
-
+    [[nodiscard]]
+    virtual std::string_view tag() const noexcept = 0;
 private:
     std::unordered_map<std::string, std::string> attributes_;
+
 };
 
 
@@ -49,7 +46,7 @@ class SVG : public SVGElement {
 	void draw() override {
 	}
 
-
+    std::string_view tag() const noexcept override { return "svg"; }
 };
 
 
@@ -60,4 +57,5 @@ public:
 
     void draw() override {
     }
+    std::string_view tag() const noexcept override { return "rect"; }
 };	

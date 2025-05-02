@@ -1,7 +1,7 @@
 ﻿#include<iostream>
 #include<glad/glad.h>
 #include<GLFW/glfw3.h>
-#include "include/svgrafix/Utility.h"
+#include"include/Utility/File.h"
 #include"shaderClass.h"
 #include"include/svgrafix/FileSVG.h"
 
@@ -28,6 +28,7 @@ GLuint indices[] =
 
 
 
+void SVG();
 int main()
 {
 	glfwInit();
@@ -85,10 +86,8 @@ int main()
 	*/
 
 
-	std::string fileContent = Utility::File::getFileContent("C:\\Users\\Not Sure\\Downloads\\test.svg");
-	FileSVG fileSVG(fileContent);
-
-
+	SVG();
+	
 //	------------------------------------------------------
 
 	while (!glfwWindowShouldClose(window))
@@ -112,3 +111,23 @@ int main()
 	glfwTerminate();
 	return 0;
 }
+
+
+
+void SVG() {
+	std::string fileContent = utility::file::read_file("C:\\Users\\Not Sure\\Downloads\\test.svg");
+	FileSVG fileSvg(std::move(fileContent));
+	auto result = fileSvg.parse();
+
+	if (!result.ok()) {
+		std::cout << "Expected errors:\n";
+		for (auto const& err : result.errors) {
+			std::cout << "  " << err << "\n";
+		}
+	}
+	else {
+		//fileSvg.get_dom().debugPrint(std::cout);
+	}
+
+	
+};

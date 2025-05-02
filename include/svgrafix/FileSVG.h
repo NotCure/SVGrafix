@@ -1,17 +1,19 @@
+#include "DomSVG.h"
+
 #include <string>
 #include <iostream>
 
 
 class FileSVG
 {
-private:
-	std::string Content;
+
 
 public:
-	FileSVG(std::string Content);
-	std::string getContent() { return Content; }
+	explicit FileSVG(std::string content);
+	const DomSVG& get_dom() const noexcept { return domSVG_; }
+	error::ParseResult parse() { return domSVG_.parse(); }
 
-
-
+private:
+	DomSVG domSVG_;
 };
 
