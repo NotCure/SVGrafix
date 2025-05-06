@@ -4,6 +4,8 @@
 
 #include <iostream>
 #include <chrono>
+
+
 static void copy_excluding_ranges(std::string_view src,
     const std::vector<std::pair<size_t, size_t>>& excludes,
     std::string& dst)
@@ -19,25 +21,23 @@ static void copy_excluding_ranges(std::string_view src,
     if (cur < src.size())   dst.append(src.substr(cur));
 }
 
+
+template<typename T>
+static std::unique_ptr<SVGElement> make_element(std::string_view body) {
+    auto e = std::make_unique<T>();
+    e->parseAttributes(body);
+    return e;
+}
+
+
 inline const std::unordered_map<std::string_view, DomSVG::Factory> DomSVG::registry_ = {
-    { "svg",   [](std::string_view body) {
-        auto e = std::make_unique<SVG>();
-        e->parseAttributes(body);
-        return e;
-    }},
-    { "rect",  [](std::string_view body) {
-        auto e = std::make_unique<SVGRect>();
-        e->parseAttributes(body);
-        return e;
-    }},
+    { "svg",  &make_element<SVG>    },
+    { "rect", &make_element<SVGRect>},
 };
 
 DomSVG::DomSVG(std::string content)
     : text_(std::move(content))
 {
-
-    remove_prologue();
-    remove_comments();
     auto start = std::chrono::high_resolution_clock::now();
     parse();
     auto stop = std::chrono::high_resolution_clock::now();
@@ -49,6 +49,10 @@ DomSVG::DomSVG(std::string content)
 error::ParseResult DomSVG::parse()
 {
     error::ParseResult result;
+    remove_prologue(result);
+    remove_comments(result);
+
+
     std::string_view view(no_comments_);
 
 
@@ -65,13 +69,27 @@ error::ParseResult DomSVG::parse()
         }
         
         std::size_t end = view.find('>', pos + 1);
-   
-
-        if (end == std::string::npos) break;
+        if (end == std::string::npos) {
+            result.errors.emplace_back(
+                error::ErrorCode::UnexpectedEOF,
+                pos,
+                "Tag opened with '<' but never closed with '>'."
+            );
+            break;
+        }
 
         /* ---- extract tag-name ------------------------------------------------ */
         std::size_t nstart = pos + 1;
         std::size_t nend = view.find_first_of(" \t/>", nstart);
+        if (nend == nstart) {
+            result.errors.emplace_back(
+                error::ErrorCode::MalformedTag,
+                pos,
+                "Empty tag name between '<' and '>'."
+            );
+            pos = end + 1;
+            continue;
+        }
         if (nend == std::string::npos || nend > end) nend = end;
         std::string_view tagName = view.substr(nstart, nend - nstart);
 
@@ -90,7 +108,7 @@ error::ParseResult DomSVG::parse()
                 needsLower = true; break;
             }
 
-        if (!needsLower)
+        if (!needsLower)    
         {
             lookupKey = tagName;                  
         }
@@ -107,49 +125,87 @@ error::ParseResult DomSVG::parse()
 
         /* ---- create element if recognised ----------------------------------- */
         auto it = registry_.find(lookupKey);
-        if (it != registry_.end())
-        {
-            auto elem = it->second(attrBody);
-            elements_.emplace_back(std::move(elem));
+        if (it == registry_.end()) {
+            result.errors.emplace_back(
+                error::ErrorCode::MalformedTag,
+                nstart,
+                std::string("Unknown tag: ") + std::string(tagName)
+            );
+        }
+        else {
+            elements_.emplace_back(it->second(attrBody));
         }
 
         pos = end + 1;
     }
     return result;
 }
-void DomSVG::remove_prologue() {
+
+void DomSVG::remove_prologue(error::ParseResult& result) {
     std::vector<std::pair<size_t, size_t>> ranges;
-    for (size_t pos = 0; (pos = text_.find("<?", pos)) != std::string::npos; ) {
-        size_t end = text_.find("?>", pos + 2);
-        if (end == std::string::npos) break;              
-        ranges.emplace_back(pos, end + 1);                
-        pos = end + 2;
+    size_t pos = 0;
+
+    while (true) {
+        size_t beg = text_.find("<?", pos);
+        if (beg == std::string::npos)
+            break;
+
+        size_t close = text_.find("?>", beg + 2);
+        size_t nested = text_.find("<?", beg + 2);
+
+        if (close == std::string::npos ||
+            (nested != std::string::npos && nested < close))
+        {
+            result.errors.emplace_back(
+                error::ErrorCode::UnexpectedEOF,
+                beg,
+                "Found '<?' without matching '?>'"
+            );
+            pos = (nested != std::string::npos) ? nested : beg + 2;
+            continue;
+        }
+
+        ranges.emplace_back(beg, close + 1);  
+        pos = close + 2;
     }
+
     copy_excluding_ranges(text_, ranges, no_prologue_);
-
 }
 
 
-void DomSVG::remove_comments() {
+void DomSVG::remove_comments(error::ParseResult& result) {
     std::vector<std::pair<size_t, size_t>> ranges;
-    for (size_t pos = 0; (pos = no_prologue_.find("<!--", pos)) != std::string::npos; ) {
-        size_t end = no_prologue_.find("-->", pos + 4);
-        if (end == std::string::npos) break;              
-        ranges.emplace_back(pos, end + 2);
-        pos = end + 3;
+    size_t pos = 0;
+
+    while (true) {
+        size_t beg = no_prologue_.find("<!--", pos);
+        if (beg == std::string::npos) break;
+
+        size_t close = no_prologue_.find("-->", beg + 4);
+        size_t nested = no_prologue_.find("<!--", beg + 4);
+
+        if (close == std::string::npos || (nested != std::string::npos && nested < close)) {
+            result.errors.emplace_back(
+                error::ErrorCode::UnclosedComment,
+                beg,
+                "Found '<!--' without matching '-->' before next '<!--'"
+            );
+            pos = (nested != std::string::npos) ? nested : beg + 4;
+            continue;
+        }
+        ranges.emplace_back(beg, close + 2);  
+        pos = close + 3;
     }
+
     copy_excluding_ranges(no_prologue_, ranges, no_comments_);
-
-
-
 }
 
 
-const DomSVG::ElementList& DomSVG::getElements() const noexcept {
+const DomSVG::ElementList& DomSVG::get_elements() const noexcept {
     return elements_;
 }
 
-void DomSVG::debugPrint(std::ostream& os) const
+void DomSVG::debug_print(std::ostream& os) const
 {
     for (const auto& e : elements_) {
    

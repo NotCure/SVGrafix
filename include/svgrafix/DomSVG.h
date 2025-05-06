@@ -12,14 +12,14 @@ class DomSVG {
 public:
     explicit DomSVG(std::string content);
     error::ParseResult parse();
-    void debugPrint(std::ostream& os) const;
+    void debug_print(std::ostream& os) const;
     
     using ElementList = std::vector<std::unique_ptr<SVGElement>>;
-    const ElementList& getElements() const noexcept;
+    const ElementList& get_elements() const noexcept;
 
 private:
-    void remove_prologue();
-    void remove_comments();
+    void remove_prologue(error::ParseResult& results);
+    void remove_comments(error::ParseResult& results);
 
     std::string text_;
     std::string no_prologue_;
@@ -27,6 +27,7 @@ private:
 
 
     ElementList elements_;
-    using Factory = std::function<std::unique_ptr<SVGElement>(std::string_view)>;
+    using Factory = std::unique_ptr<SVGElement>(*)(std::string_view);
+
     static const std::unordered_map<std::string_view, Factory> registry_;
 };

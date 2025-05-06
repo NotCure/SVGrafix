@@ -17,6 +17,7 @@ namespace error {
         UnclosedComment,
         FileNotFound,
         ReadError,
+		Contact
     };
 
     constexpr const char* to_string(ErrorCode c) noexcept {
@@ -29,6 +30,7 @@ namespace error {
         case ErrorCode::UnclosedComment: return "Unclosed comment";
         case ErrorCode::FileNotFound:    return "File not found";
         case ErrorCode::ReadError:       return "Read error";
+		case ErrorCode::Contact:       return "Contact error";
         }
         return "Unknown error thrown";
     }
