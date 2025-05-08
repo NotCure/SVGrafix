@@ -66,6 +66,9 @@
     <ClCompile Include="include\Utility\Parser.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="include\svgrafix\SVGNode.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Library Include="Libraries\lib\glfw3.lib" />
@@ -104,9 +107,6 @@
     <ClInclude Include="include\svgrafix\SVGElement.h">
       <Filter>Header Files\SVG\Parser\DomSVG</Filter>
     </ClInclude>
-    <ClInclude Include="include\svgrafix\TagTypes.h">
-      <Filter>Header Files\SVG\Parser\Utility</Filter>
-    </ClInclude>
     <ClInclude Include="include\Utility\String.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -117,6 +117,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\svgrafix\Error\ParseError.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\svgrafix\SVGNode.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

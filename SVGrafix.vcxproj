@@ -152,6 +152,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="include\svgrafix\DomSVG.cpp" />
+    <ClCompile Include="include\svgrafix\SVGNode.cpp" />
     <ClCompile Include="include\Utility\File.cpp" />
     <ClCompile Include="include\Utility\Parser.cpp" />
     <ClCompile Include="include\Utility\String.cpp" />
@@ -172,6 +173,7 @@
   <ItemGroup>
     <ClInclude Include="include\svgrafix\DomSVG.h" />
     <ClInclude Include="include\svgrafix\Error\ParseError.h" />
+    <ClInclude Include="include\svgrafix\SVGNode.h" />
     <ClInclude Include="include\Utility\File.h" />
     <ClInclude Include="include\Utility\Parser.h" />
     <ClInclude Include="include\Utility\String.h" />
@@ -183,7 +185,6 @@
     <ClInclude Include="Libraries\include\KHR\khrplatform.h" />
     <ClInclude Include="shaderClass.h" />
     <ClInclude Include="include\svgrafix\SVGElement.h" />
-    <ClInclude Include="include\svgrafix\TagTypes.h" />
     <ClInclude Include="renderer\VAO.h" />
     <ClInclude Include="renderer\VBO.h" />
   </ItemGroup>

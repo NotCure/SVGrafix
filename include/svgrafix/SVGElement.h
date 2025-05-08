@@ -50,12 +50,29 @@ class SVG : public SVGElement {
 };
 
 
+struct RectGeom { float x, y, w, h; };
 class SVGRect : public SVGElement {
 public:
     SVGRect() = default;
     ~SVGRect() override = default;
 
-    void draw() override {
+    RectGeom geometry(float svgH) const {         
+        float x = std::stof(std::string(get_attr("x")));
+        float y = std::stof(std::string(get_attr("y")));
+        float w = std::stof(std::string(get_attr("width")));
+        float h = std::stof(std::string(get_attr("height")));
+        return { x, svgH - y - h, w, h };
     }
     std::string_view tag() const noexcept override { return "rect"; }
 };	
+
+
+class SVGGroup : public SVGElement {
+public:
+    SVGGroup() = default;
+    ~SVGGroup() override = default;
+
+    void draw() override {
+    }
+    std::string_view tag() const noexcept override { return "g"; }
+};

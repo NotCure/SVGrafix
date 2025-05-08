@@ -126,8 +126,7 @@ void SVG() {
 		}
 	}
 	else {
-		//fileSvg.get_dom().debugPrint(std::cout);
+		fileSvg.get_dom().debug_print(std::cout);
 	}
 
-	
 };
