@@ -1,7 +1,7 @@
 ﻿#pragma once
 
 #include "SVGElement.h"
-#include "Error/ParseError.h"
+#include "error/ParseError.h"
 #include "SVGNode.h"
 #include <functional>
 #include <memory> 

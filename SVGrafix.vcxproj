@@ -71,20 +71,22 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>C:\Users\Not Sure\source\repos\SVGrafix\Libraries\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)Libraries\include;$(ProjectDir)include;$(IncludePath)</IncludePath>
     <ExternalIncludePath>C:\Users\Not Sure\source\repos\SVGrafix\Libraries\lib;$(ExternalIncludePath)</ExternalIncludePath>
+    <LibraryPath>$(SolutionDir)Libraries\include;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>C:\Users\Not Sure\source\repos\SVGrafix\Libraries\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)Libraries\include;$(ProjectDir)include;$(IncludePath)</IncludePath>
     <ExternalIncludePath>C:\Users\Not Sure\source\repos\SVGrafix\Libraries\lib;$(ExternalIncludePath)</ExternalIncludePath>
+    <LibraryPath>$(SolutionDir)Libraries\include;$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>C:\Users\Not Sure\source\repos\SVGrafix\Libraries\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Users\Not Sure\source\repos\SVGrafix\Libraries\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)Libraries\include;$(ProjectDir)include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)Libraries\include;C:\Users\Not Sure\source\repos\SVGrafix\Libraries\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>C:\Users\Not Sure\source\repos\SVGrafix\Libraries\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Users\Not Sure\source\repos\SVGrafix\Libraries\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)Libraries\include;$(ProjectDir)include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)Libraries\include;C:\Users\Not Sure\source\repos\SVGrafix\Libraries\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -93,11 +95,13 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalIncludeDirectories>$(SolutionDir)include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>glfw3.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)/Libraries/lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -109,6 +113,7 @@
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalIncludeDirectories>$(SolutionDir)include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -116,6 +121,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>glfw3.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)/Libraries/lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -125,11 +131,13 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalIncludeDirectories>$(SolutionDir)include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>glfw3.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)/Libraries/lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -141,6 +149,7 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalIncludeDirectories>$(SolutionDir)include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -148,16 +157,17 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>glfw3.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)/Libraries/lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="include\svgrafix\DomSVG.cpp" />
-    <ClCompile Include="include\svgrafix\SVGNode.cpp" />
-    <ClCompile Include="include\Utility\File.cpp" />
-    <ClCompile Include="include\Utility\Parser.cpp" />
-    <ClCompile Include="include\Utility\String.cpp" />
+    <ClCompile Include="src\svg\DomSVG.cpp" />
+    <ClCompile Include="src\svg\SVGElement.cpp" />
+    <ClCompile Include="src\utility\File.cpp" />
+    <ClCompile Include="src\utility\Parser.cpp" />
+    <ClCompile Include="src\utility\String.cpp" />
     <ClCompile Include="renderer\EBO.cpp" />
-    <ClCompile Include="include\svgrafix\FileSVG.cpp" />
+    <ClCompile Include="src\svg\FileSVG.cpp" />
     <ClCompile Include="glad.c" />
     <ClCompile Include="Main.cpp">
       <LanguageStandard Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">stdcpp20</LanguageStandard>
@@ -171,20 +181,22 @@
     <Library Include="Libraries\lib\glfw3.lib" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\svgrafix\DomSVG.h" />
-    <ClInclude Include="include\svgrafix\Error\ParseError.h" />
-    <ClInclude Include="include\svgrafix\SVGNode.h" />
-    <ClInclude Include="include\Utility\File.h" />
-    <ClInclude Include="include\Utility\Parser.h" />
-    <ClInclude Include="include\Utility\String.h" />
+    <ClInclude Include="include\render\RenderNode.h" />
+    <ClInclude Include="include\render\Tessellator.h" />
+    <ClInclude Include="include\svg\DomSVG.h" />
+    <ClInclude Include="include\svg\error\ParseError.h" />
+    <ClInclude Include="include\svg\SVGNode.h" />
+    <ClInclude Include="include\utility\File.h" />
+    <ClInclude Include="include\utility\Parser.h" />
+    <ClInclude Include="include\utility\String.h" />
     <ClInclude Include="renderer\EBO.h" />
-    <ClInclude Include="include\svgrafix\FileSVG.h" />
+    <ClInclude Include="include\svg\FileSVG.h" />
     <ClInclude Include="Libraries\include\glad\glad.h" />
     <ClInclude Include="Libraries\include\GLFW\glfw3.h" />
     <ClInclude Include="Libraries\include\GLFW\glfw3native.h" />
     <ClInclude Include="Libraries\include\KHR\khrplatform.h" />
     <ClInclude Include="shaderClass.h" />
-    <ClInclude Include="include\svgrafix\SVGElement.h" />
+    <ClInclude Include="include\svg\SVGElement.h" />
     <ClInclude Include="renderer\VAO.h" />
     <ClInclude Include="renderer\VBO.h" />
   </ItemGroup>

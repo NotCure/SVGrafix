@@ -1,18 +1,23 @@
 ﻿#pragma once
 
 #include "../Utility/Parser.h"
-
+#include<glad/glad.h>
 #include <string>
 #include <unordered_map>
 
 
 
 
+struct TessOutput {
+    std::vector<float>  verts;   
+    std::vector<GLuint> indices; 
+};
 
 class SVGElement {
 public:
     virtual ~SVGElement() = default;
-    virtual void draw() = 0;
+    
+    virtual TessOutput tessellate() const = 0;
 
     void parseAttributes(std::string_view body) {
         utility::parser::parse_attributes(body, attributes_);
@@ -43,8 +48,7 @@ class SVG : public SVGElement {
 	SVG() = default;
 	~SVG() override = default;
 
-	void draw() override {
-	}
+    TessOutput tessellate() const override;
 
     std::string_view tag() const noexcept override { return "svg"; }
 };
@@ -56,13 +60,16 @@ public:
     SVGRect() = default;
     ~SVGRect() override = default;
 
-    RectGeom geometry(float svgH) const {         
-        float x = std::stof(std::string(get_attr("x")));
-        float y = std::stof(std::string(get_attr("y")));
-        float w = std::stof(std::string(get_attr("width")));
-        float h = std::stof(std::string(get_attr("height")));
-        return { x, svgH - y - h, w, h };
+    RectGeom geometry() const {
+        auto num = [](std::string_view sv) { return std::stof(std::string(sv)); };
+        return { num(get_attr("x")),
+                 num(get_attr("y")),
+                 num(get_attr("width")),
+                 num(get_attr("height")) };
     }
+
+    TessOutput tessellate() const override;
+
     std::string_view tag() const noexcept override { return "rect"; }
 };	
 
@@ -72,7 +79,7 @@ public:
     SVGGroup() = default;
     ~SVGGroup() override = default;
 
-    void draw() override {
-    }
+    TessOutput tessellate() const override;
+
     std::string_view tag() const noexcept override { return "g"; }
 };

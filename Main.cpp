@@ -1,9 +1,9 @@
 ﻿#include<iostream>
 #include<glad/glad.h>
 #include<GLFW/glfw3.h>
-#include"include/Utility/File.h"
+#include<utility/File.h>
 #include"shaderClass.h"
-#include"include/svgrafix/FileSVG.h"
+#include<svg/FileSVG.h>
 
 #include"renderer/VAO.h"
 #include"renderer/VBO.h"

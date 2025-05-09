@@ -1,10 +1,9 @@
-﻿#include "DomSVG.h"
-#include "Error/ParseError.h"
+﻿#include <svg/DomSVG.h>
+#include <svg/error/ParseError.h>
 
 #include <iostream>
 #include <chrono>
-#include "../Utility/String.h"
-
+#include <utility/String.h>
 
 static void copy_excluding_ranges(std::string_view src,
     const std::vector<std::pair<size_t, size_t>>& excludes,

@@ -51,22 +51,22 @@
     <ClCompile Include="renderer\VAO.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="include\svgrafix\FileSVG.cpp">
+    <ClCompile Include="src\svg\FileSVG.cpp">
       <Filter>Header Files\SVG\Parser\FileSVG</Filter>
     </ClCompile>
-    <ClCompile Include="include\svgrafix\DomSVG.cpp">
+    <ClCompile Include="src\svg\DomSVG.cpp">
       <Filter>Header Files\SVG\Parser\DomSVG</Filter>
     </ClCompile>
-    <ClCompile Include="include\Utility\String.cpp">
+    <ClCompile Include="src\utility\String.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="include\Utility\File.cpp">
+    <ClCompile Include="src\utility\File.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="include\Utility\Parser.cpp">
+    <ClCompile Include="src\utility\Parser.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="include\svgrafix\SVGNode.cpp">
+    <ClCompile Include="src\svg\SVGElement.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -98,28 +98,34 @@
     <ClInclude Include="renderer\VAO.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\svgrafix\FileSVG.h">
+    <ClInclude Include="include\svg\FileSVG.h">
       <Filter>Header Files\SVG\Parser\FileSVG</Filter>
     </ClInclude>
-    <ClInclude Include="include\svgrafix\DomSVG.h">
+    <ClInclude Include="include\svg\DomSVG.h">
       <Filter>Header Files\SVG\Parser\DomSVG</Filter>
     </ClInclude>
-    <ClInclude Include="include\svgrafix\SVGElement.h">
+    <ClInclude Include="include\svg\SVGElement.h">
       <Filter>Header Files\SVG\Parser\DomSVG</Filter>
     </ClInclude>
-    <ClInclude Include="include\Utility\String.h">
+    <ClInclude Include="include\utility\String.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Utility\File.h">
+    <ClInclude Include="include\utility\File.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Utility\Parser.h">
+    <ClInclude Include="include\utility\Parser.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\svgrafix\Error\ParseError.h">
+    <ClInclude Include="include\svg\error\ParseError.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\svgrafix\SVGNode.h">
+    <ClInclude Include="include\svg\SVGNode.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\render\RenderNode.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\render\Tessellator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
