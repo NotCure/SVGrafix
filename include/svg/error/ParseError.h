@@ -17,7 +17,13 @@ namespace error {
         UnclosedComment,
         FileNotFound,
         ReadError,
-		Contact
+		Contact,
+
+        CSS_SyntaxError,
+        CSS_UnexpectedEOF,
+		CSS_BadSelector,
+		CSS_BadDeclaration,
+
     };
 
     constexpr const char* to_string(ErrorCode c) noexcept {
@@ -31,6 +37,11 @@ namespace error {
         case ErrorCode::FileNotFound:    return "File not found";
         case ErrorCode::ReadError:       return "Read error";
 		case ErrorCode::Contact:       return "Contact error";
+
+		case ErrorCode::CSS_SyntaxError: return "CSS syntax error";
+		case ErrorCode::CSS_UnexpectedEOF: return "CSS unexpected end-of-file";
+		case ErrorCode::CSS_BadSelector: return "CSS bad selector";
+		case ErrorCode::CSS_BadDeclaration: return "CSS bad declaration";
         }
         return "Unknown error thrown";
     }

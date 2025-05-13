@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -183,6 +183,7 @@
   <ItemGroup>
     <ClInclude Include="include\render\RenderNode.h" />
     <ClInclude Include="include\render\Tessellator.h" />
+    <ClInclude Include="include\svg\Css.h" />
     <ClInclude Include="include\svg\DomSVG.h" />
     <ClInclude Include="include\svg\error\ParseError.h" />
     <ClInclude Include="include\svg\SVGNode.h" />
