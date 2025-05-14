@@ -1,9 +1,10 @@
 ﻿#include <svg/DomSVG.h>
 #include <svg/error/ParseError.h>
-
+#include <utility/String.h>
+#include <svg/elements/SVG.h>
 #include <iostream>
 #include <chrono>
-#include <utility/String.h>
+
 
 static void copy_excluding_ranges(std::string_view src,
     const std::vector<std::pair<size_t, size_t>>& excludes,
@@ -29,11 +30,7 @@ static std::unique_ptr<SVGElement> make_element(std::string_view body) {
 }
 
 
-inline const std::unordered_map<std::string_view, DomSVG::Factory> DomSVG::registry_ = {
-    { "svg",  &make_element<SVG>    },
-    { "rect", &make_element<SVGRect>},
-    { "g", &make_element<SVGGroup>},
-};
+
 
 DomSVG::DomSVG(std::string content)
     : text_(std::move(content)){}
@@ -162,11 +159,9 @@ error::ParseResult DomSVG::parse() {
             break;
         }
         case State::TagOpen: {
-            // Are we closing?
             bool isClosing = (i < n && src[i] == '/');
             if (isClosing) ++i;
 
-            // 1) parse tag name
             size_t nameStart = i;
             while (i < n) {
                 char c = src[i];
@@ -175,24 +170,21 @@ error::ParseResult DomSVG::parse() {
             }
             std::string_view tagName{ src.data() + nameStart, i - nameStart };
 
-            // 2) parse attributes until '>'
             size_t attrStart = i;
             bool selfClosing = false;
             while (i < n && src[i] != '>') {
                 if (src[i] == '/' && (i + 1 < n && src[i + 1] == '>')) {
                     selfClosing = true;
-                    i += 2;  // skip "/>"
+                    i += 2;  
                     break;
                 }
                 ++i;
             }
             size_t attrEnd = i;
-            if (i < n && src[i] == '>') ++i;  // skip '>'
+            if (i < n && src[i] == '>') ++i;  
             std::string_view attrBody{ src.data() + attrStart, attrEnd - attrStart };
 
-            // 3) dispatch
             if (isClosing) {
-                // closing tag: must match top of stack
                 if (stack_.size() <= 1) {
                     result.errors.emplace_back(
                         error::ErrorCode::MalformedTag, nameStart,
@@ -205,7 +197,6 @@ error::ParseResult DomSVG::parse() {
                             error::ErrorCode::MalformedTag, nameStart,
                             "Closing </" + std::string(tagName) +
                             "> does not match <" + std::string(openTag) + ">");
-                        // pop until we find a match (error recovery)
                         while (stack_.size() > 1 &&
                             !iequals_n(stack_.back()->element->tag().data(),
                                 tagName.data(),
@@ -215,27 +206,26 @@ error::ParseResult DomSVG::parse() {
                         if (stack_.size() > 1) stack_.pop_back();
                     }
                     else {
-                        // normal pop
                         stack_.pop_back();
                     }
                 }
             }
             else {
-                // opening or self-closing tag
                 auto lower = [](std::string_view sv) {
                     std::string out(sv);
                     std::transform(out.begin(), out.end(), out.begin(), [](unsigned char c) { return std::tolower(c); });
                     return out;
                 };
                 std::string key = lower(tagName);
-                auto it = registry_.find(key);
-                if (it == registry_.end()) {
+                auto& R = DomSVG::registry();
+                auto found = R.find(key);
+                if (found == R.end()) {
                     result.errors.emplace_back(
                         error::ErrorCode::MalformedTag, nameStart,
                         "Unknown tag: " + std::string(tagName));
                 }
                 else {
-                    auto elem = it->second(attrBody);
+                    auto elem = found->second(attrBody);
                     auto node = std::make_unique<SVGNode>(std::move(elem));
                     SVGNode* raw = node.get();
                     stack_.back()->children.emplace_back(std::move(node));
@@ -356,9 +346,10 @@ void DomSVG::debug_print(std::ostream& os) const
     visit(root_.get(), 0);
 }
 
-void DomSVG::extract_css()
+std::unordered_map<std::string_view, DomSVG::Factory>& DomSVG::registry()
 {
-
+    static std::unordered_map<std::string_view, Factory> m;
+    return m;
 }
 
 void DomSVG::clear()

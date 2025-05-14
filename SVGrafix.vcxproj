@@ -161,8 +161,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="include\svg\SceneBuilder.h" />
     <ClCompile Include="src\svg\DomSVG.cpp" />
-    <ClCompile Include="src\svg\SVGElement.cpp" />
+    <ClCompile Include="src\svg\elements\SVG.cpp" />
+    <ClCompile Include="src\svg\elements\SVGGroup.cpp" />
+    <ClCompile Include="src\svg\elements\SVGRect.cpp" />
     <ClCompile Include="src\utility\File.cpp" />
     <ClCompile Include="src\utility\Parser.cpp" />
     <ClCompile Include="src\utility\String.cpp" />
@@ -185,10 +188,15 @@
     <ClInclude Include="include\render\Tessellator.h" />
     <ClInclude Include="include\svg\Css.h" />
     <ClInclude Include="include\svg\DomSVG.h" />
+    <ClInclude Include="include\svg\elements\Factory.h" />
+    <ClInclude Include="include\svg\elements\SVG.h" />
+    <ClInclude Include="include\svg\elements\SVGGroup.h" />
+    <ClInclude Include="include\svg\elements\SVGRect.h" />
     <ClInclude Include="include\svg\error\ParseError.h" />
     <ClInclude Include="include\svg\SVGNode.h" />
     <ClInclude Include="include\utility\File.h" />
     <ClInclude Include="include\utility\Parser.h" />
+    <ClInclude Include="include\utility\Render.h" />
     <ClInclude Include="include\utility\String.h" />
     <ClInclude Include="renderer\EBO.h" />
     <ClInclude Include="include\svg\FileSVG.h" />
