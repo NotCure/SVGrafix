@@ -1,3 +1,4 @@
+﻿#pragma once
 #include <iostream>
 #include <vector>
 
@@ -8,42 +9,20 @@
 
 
 namespace css {
-	struct Declaration // "fill: #000000;"
+	struct Declaration
 	{
-		std::string property; // "fill"
-		std::string value; // "#000000"
-		int specificity; // "(id, class, tag)"
+		std::string property; 
+		std::string value; 
+		int specificity;
 	};
 
-	struct Rule // "div { fill: #000000; }"
+	struct Rule 
 	{
-		std::vector<std::string> selectors; // "div", ".class", "#id"
-		std::vector<Declaration> declarations; // "fill: #000000;"
+		std::vector<std::string> selectors; 
+		std::vector<Declaration> declarations;
 	};
 
-    static bool matches(const SVGElement& el, std::string_view sel) {
-        if (sel.empty()) return false;
-        if (sel[0] == '.') {           
-            auto cls = el.get_attr("class");
-            size_t p = 0;
-            while (p < cls.size()) {
-                auto nxt = cls.find(' ', p);
-                auto part = cls.substr(p, nxt == std::string::npos ? cls.size() : nxt - p);
-                if (part == sel.substr(1)) return true;
-                if (nxt == std::string::npos) break;
-                p = nxt + 1;
-            }
-            return false;
-        }
-        else if (sel[0] == '#')  {
-            return el.get_attr("id") == sel.substr(1);
-        }
-        else{
-            return std::equal(sel.begin(), sel.end(),
-                el.tag().begin(), el.tag().end(),
-                [](char a, char b) { return tolower(a) == tolower(b); });
-        }
-    }
+	static bool matches(const SVGElement& el, std::string_view sel);
 
 
 
@@ -51,34 +30,10 @@ namespace css {
 	class StyleSheet
 	{
 	public:
-		void add_rule(Rule rule) {
-			rules_.push_back(std::move(rule));
-		}
+        void add_rule(Rule rule);
 
-
-
-
-		std::unordered_map<std::string, std::string> 
-            declartions_for(const SVGElement& el) const {
-            std::unordered_map<std::string, std::string> out;
-            std::unordered_map<std::string, int>          best_spec;
-
-            for (auto const& rule : rules_) {
-                for (auto const& sel : rule.selectors) {
-                    if (!matches(el, sel)) continue;
-                    for (auto const& d : rule.declarations) {
-                        auto it = best_spec.find(d.property);
-                        if (it == best_spec.end() || d.specificity >= it->second) {
-                            out[d.property] = d.value;
-                            best_spec[d.property] = d.specificity;
-                        }
-                    }
-                }
-            }
-            return out;
-
-		} 
-
+        std::unordered_map<std::string, std::string>
+            declartions_for(const SVGElement& el) const;
 	private:
 		std::vector<Rule> rules_;
 
@@ -88,8 +43,7 @@ namespace css {
 
     inline void parse_into(StyleSheet& sheet,
         std::string_view cssText,
-        error::ParseResult& result)
-    {
+        error::ParseResult& result) {
         size_t pos = 0, n = cssText.size();
         while (pos < n) {
             pos = cssText.find_first_not_of(" \t\r\n", pos);
@@ -100,7 +54,7 @@ namespace css {
                 result.errors.emplace_back(
                     error::ErrorCode::CSS_SyntaxError, pos,
                     "Expected '{' to open CSS rule");
-                break;    
+                break;
             }
 
             std::string_view sels = cssText.substr(pos, brace - pos);
@@ -130,7 +84,6 @@ namespace css {
                 result.errors.emplace_back(
                     error::ErrorCode::CSS_SyntaxError, nextOpen,
                     "Unexpected '{' before closing '}'");
-                // skip past this bad rule
                 pos = endb + 1;
                 continue;
             }
@@ -165,18 +118,25 @@ namespace css {
                 sp = comma + 1;
             }
 
+            auto trim = [](std::string_view sv) {
+                auto a = sv.find_first_not_of(" \t\r\n");
+                if (a == std::string_view::npos) return std::string_view{};
+                auto b = sv.find_last_not_of(" \t\r\n");
+                return sv.substr(a, b - a + 1);
+            };
+
+
             size_t dp = 0;
             while (dp < decls.size()) {
                 auto semi = decls.find(';', dp);
-                auto piece = decls.substr(
-                    dp,
-                    (semi == std::string_view::npos
-                        ? decls.size()
-                        : semi)
-                    - dp);
-                dp = (semi == std::string_view::npos)
-                    ? decls.size()
-                    : (semi + 1);
+                auto piece = decls.substr(dp,
+                    (semi == std::string_view::npos ? decls.size() : semi) - dp);
+
+                dp = (semi == std::string_view::npos) ? decls.size() : semi + 1;
+
+                piece = trim(piece);
+                if (piece.empty())
+                    continue;
 
                 auto colon = piece.find(':');
                 if (colon == std::string_view::npos) {

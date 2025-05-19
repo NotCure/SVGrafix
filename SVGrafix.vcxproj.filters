@@ -66,7 +66,7 @@
     <ClCompile Include="src\utility\Parser.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="include\svg\SceneBuilder.h">
+    <ClCompile Include="include\render\SceneBuilder.h">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\svg\elements\SVGGroup.cpp">
@@ -76,6 +76,15 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\svg\elements\SVGRect.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\svg\elements\SVGDefs.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\utility\Color.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\svg\Css.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -131,12 +140,6 @@
     <ClInclude Include="include\svg\SVGNode.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\render\RenderNode.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\render\Tessellator.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\svg\Css.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -153,6 +156,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\utility\Render.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\svg\elements\SVGDefs.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\utility\Color.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
