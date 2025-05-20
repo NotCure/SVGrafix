@@ -15,6 +15,8 @@ namespace utility::file {
             std::cout << "invalid extension" << extension << '\n';
 		
         std::filesystem::path path(path_sv);
+		std::cerr << "read_all: " << path << '\n';
+
         std::ifstream file(path, std::ios::binary);
         if (!file) {
             std::cerr << "read_all: cannot open " << path << '\n';

@@ -30,8 +30,6 @@ static std::unique_ptr<SVGElement> make_element(std::string_view body) {
 }
 
 
-
-
 DomSVG::DomSVG(std::string content)
     : text_(std::move(content)){}
 

@@ -1,68 +1,114 @@
-// scene/SceneBuilder.cpp
+﻿// scene/SceneBuilder.cpp
 
 #include <render/SceneBuilder.h>
 #include <svg/elements/SVGRect.h>  
+#include <render/EBO.h>
+#include <render/VBO.h>
+#include <render/VAO.h>
+
 
 void SceneBuilder::build() {
     buckets_.clear();
-    std::unordered_map<std::string, std::string> empty;
-    walk(dom_.root(), empty);
+    vaos_.clear();
+    vbos_.clear();
+    ebos_.clear();
+    indexCounts_.clear();
+    fills_.clear();
+
+
+    RenderContext ctx;
+    for (auto const& childNode : dom_.root()->children) {
+        if (auto* svgEl = dynamic_cast<SVG*>(childNode->element.get())) {
+            ctx.vb = svgEl->viewbox();
+            break;
+        }
+    }
+
+    walk(dom_.root(), ctx);
+
 
     for (auto& [color, bucket] : buckets_) {
-        GLuint vao, vbo, ebo;
-        glGenVertexArrays(1, &vao);
-        glGenBuffers(1, &vbo);
-        glGenBuffers(1, &ebo);
+        VAO vao;
+        VBO vbo(bucket.verts.data(),
+            bucket.verts.size() * sizeof(float));
+        EBO ebo(bucket.indices.data(),
+            bucket.indices.size() * sizeof(GLuint));\
 
-        glBindVertexArray(vao);
 
-        glBindBuffer(GL_ARRAY_BUFFER, vbo);
-        glBufferData(GL_ARRAY_BUFFER,
-            bucket.verts.size() * sizeof(float),
-            bucket.verts.data(), GL_STATIC_DRAW);
+        vao.Bind();
+        vbo.Bind();
+        ebo.Bind();
 
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER,
-            bucket.indices.size() * sizeof(GLuint),
-            bucket.indices.data(), GL_STATIC_DRAW);
-
-        // assume layout(location=0) is vec3 position
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
         glEnableVertexAttribArray(0);
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE,
-            3 * sizeof(float), (void*)0);
+        vao.Unbind();
+        vbo.Unbind();
+        ebo.Unbind();
 
-        glBindVertexArray(0);
+        vaos_.push_back(vao.ID);
+        vbos_.push_back(vbo.ID);
+        ebos_.push_back(ebo.ID);
+        indexCounts_.push_back((GLsizei)bucket.indices.size());
+        fills_.push_back(color);
+    }
 
-        vaos_.push_back(vao);
-        vbos_.push_back(vbo);
-        ibos_.push_back(ebo);
-
-        bucket.color = color;
+    std::cerr << "Got " << buckets_.size() << " color buckets\n";
+    for (auto const& [c, bucket] : buckets_) {
+        std::cerr << "  color=("
+            << c.r << "," << c.g << "," << c.b << "," << c.a << ") "
+            << bucket.verts.size() / 3 << " verts, "
+            << bucket.indices.size() << " indices\n";
     }
 }
 
-void SceneBuilder::walk(
-    const SVGNode* node,
-    const std::unordered_map<std::string, std::string>& inherited)
-{
-    auto myAttrs = dom_.stylesheet().declartions_for(*node->element);
-    auto style = inherited;
-    style.insert(myAttrs.begin(), myAttrs.end());
+void SceneBuilder::walk(const SVGNode* node, RenderContext ctx) {
+    auto local = dom_.stylesheet().declartions_for(*node->element);
+    ctx.style.insert(local.begin(), local.end());
 
     if (auto* rect = dynamic_cast<SVGRect*>(node->element.get())) {
         auto mesh = rect->tessellate();
-        Rgba col = parse_color(style["fill"]);
-        auto& bucket = buckets_[col];
-        bucket.color = col;
 
-        GLuint base = bucket.verts.size() / 3;
-        bucket.verts.insert(bucket.verts.end(),
-            mesh.verts.begin(),
-            mesh.verts.end());
+        for (size_t i = 0; i < mesh.verts.size(); i += 3) {
+            Vec3 P{ mesh.verts[i + 0],
+                    mesh.verts[i + 1],
+                    1.0f };
+            Vec3 R = ctx.ctm * P;
+            mesh.verts[i + 0] = R.x;
+            mesh.verts[i + 1] = R.y;
+        }
+
+        for (size_t i = 0; i < mesh.verts.size(); i += 3) {
+            float x = mesh.verts[i],
+                y = mesh.verts[i + 1];
+            mesh.verts[i] = ((x - ctx.vb.minX) / ctx.vb.width) * 2.f - 1.f;
+            mesh.verts[i + 1] = 1.f - ((y - ctx.vb.minY) / ctx.vb.height) * 2.f;
+        }
+
+		std::cerr << "css color" << ctx.style["fill"] << "\n";
+        Rgba fill = parse_color(ctx.style["fill"]);
+        auto& B = buckets_[fill];
+        B.color = fill;
+
+        GLuint base = (GLuint)(B.verts.size() / 3);
+        B.verts.insert(B.verts.end(),
+            mesh.verts.begin(), mesh.verts.end());
         for (auto idx : mesh.indices)
-            bucket.indices.push_back(base + idx);
+            B.indices.push_back(base + idx);
     }
 
     for (auto& child : node->children)
-        walk(child.get(), style);
+        walk(child.get(), ctx);
+}
+
+
+void SceneBuilder::draw( Shader& shader) const {
+    shader.Activate();
+    for (size_t i = 0; i < vaos_.size(); ++i) {
+        const auto& c = fills_[i];
+        shader.set_vec4("uFill", c.r, c.g, c.b, c.a);
+        glBindVertexArray(vaos_[i]);
+
+        glDrawElements(GL_TRIANGLES, indexCounts_[i], GL_UNSIGNED_INT, nullptr);
+    }
+    glBindVertexArray(0);
 }

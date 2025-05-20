@@ -1,4 +1,3 @@
-// include/error/ParseResult.h
 #pragma once
 
 #include <vector>
