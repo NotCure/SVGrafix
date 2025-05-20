@@ -22,7 +22,6 @@ namespace std {
     {
         size_t operator()(const Rgba& c) const noexcept
         {
-            // cheap combine of four floats
             const auto* p = reinterpret_cast<const std::uint32_t*>(&c);
             size_t h = 14695981039346656037u;
             h = (h ^ p[0]) * 1099511628211u;

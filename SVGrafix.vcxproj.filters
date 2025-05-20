@@ -42,13 +42,13 @@
     <ClCompile Include="shaderClass.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="renderer\VBO.cpp">
+    <ClCompile Include="src\render\VBO.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="renderer\EBO.cpp">
+    <ClCompile Include="src\render\EBO.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="renderer\VAO.cpp">
+    <ClCompile Include="src\render\VAO.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\svg\FileSVG.cpp">
@@ -87,6 +87,9 @@
     <ClCompile Include="src\svg\Css.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\render\SceneBuilder.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Library Include="Libraries\lib\glfw3.lib" />
@@ -107,13 +110,13 @@
     <ClInclude Include="shaderClass.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="renderer\VBO.h">
+    <ClInclude Include="include\render\VBO.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="renderer\EBO.h">
+    <ClInclude Include="include\render\EBO.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="renderer\VAO.h">
+    <ClInclude Include="include\render\VAO.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\svg\FileSVG.h">

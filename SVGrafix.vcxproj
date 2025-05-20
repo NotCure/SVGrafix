@@ -162,6 +162,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="include\render\SceneBuilder.h" />
+    <ClCompile Include="src\render\SceneBuilder.cpp" />
     <ClCompile Include="src\svg\Css.cpp" />
     <ClCompile Include="src\svg\DomSVG.cpp" />
     <ClCompile Include="src\svg\elements\SVG.cpp" />
@@ -172,7 +173,7 @@
     <ClCompile Include="src\utility\File.cpp" />
     <ClCompile Include="src\utility\Parser.cpp" />
     <ClCompile Include="src\utility\String.cpp" />
-    <ClCompile Include="renderer\EBO.cpp" />
+    <ClCompile Include="src\render\EBO.cpp" />
     <ClCompile Include="src\svg\FileSVG.cpp" />
     <ClCompile Include="glad.c" />
     <ClCompile Include="Main.cpp">
@@ -180,8 +181,8 @@
       <LanguageStandard Condition="'$(Configuration)|$(Platform)'=='Release|x64'">stdcpp20</LanguageStandard>
     </ClCompile>
     <ClCompile Include="shaderClass.cpp" />
-    <ClCompile Include="renderer\VAO.cpp" />
-    <ClCompile Include="renderer\VBO.cpp" />
+    <ClCompile Include="src\render\VAO.cpp" />
+    <ClCompile Include="src\render\VBO.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="Libraries\lib\glfw3.lib" />
@@ -201,7 +202,7 @@
     <ClInclude Include="include\utility\Parser.h" />
     <ClInclude Include="include\utility\Render.h" />
     <ClInclude Include="include\utility\String.h" />
-    <ClInclude Include="renderer\EBO.h" />
+    <ClInclude Include="include\render\EBO.h" />
     <ClInclude Include="include\svg\FileSVG.h" />
     <ClInclude Include="Libraries\include\glad\glad.h" />
     <ClInclude Include="Libraries\include\GLFW\glfw3.h" />
@@ -209,8 +210,8 @@
     <ClInclude Include="Libraries\include\KHR\khrplatform.h" />
     <ClInclude Include="shaderClass.h" />
     <ClInclude Include="include\svg\SVGElement.h" />
-    <ClInclude Include="renderer\VAO.h" />
-    <ClInclude Include="renderer\VBO.h" />
+    <ClInclude Include="include\render\VAO.h" />
+    <ClInclude Include="include\render\VBO.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="default.frag" />

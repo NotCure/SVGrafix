@@ -3,7 +3,7 @@
 #include <utility/Color.h>
 
 struct MeshBucket {
-    std::vector<float>  verts;   // x y z
+    std::vector<float>  verts;   
     std::vector<GLuint> indices; 
     Rgba                color;   
 
