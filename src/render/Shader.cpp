@@ -1,83 +1,80 @@
 
 #include <render/Shader.h>
+#include <fstream>
+#include <sstream>
+#include <iostream>
 
 
-static void printLog(GLuint obj, PFNGLGETSHADERINFOLOGPROC getInfoLog, PFNGLGETSHADERSOURCEPROC /*unused*/) {
-	GLint len = 0;
-	getInfoLog(obj, 0, &len, nullptr);
-	if (len > 0) {
-		std::string log(len, '\0');
-		getInfoLog(obj, len, nullptr, &log[0]);
-		std::cerr << log << "\n";
-	}
+static std::string loadFile(const char* path) {
+    std::ifstream f(path, std::ios::in | std::ios::binary);
+    if (!f) throw std::runtime_error(std::string("Cannot open ") + path);
+    std::ostringstream ss;
+    ss << f.rdbuf();
+    return ss.str();
 }
 
-std::string get_file_contents(const char* filename) {
-	std::ifstream in(filename, std::ios::in);
-	if (in) {
-		std::string contents;
-		in.seekg(0, std::ios::end);
-		contents.resize(in.tellg());
-		in.seekg(0, std::ios::beg);
-		in.read(&contents[0], contents.size());
-		in.close();
-		return(contents);
-	}
-	throw(errno);
+GLuint Shader::compile(GLenum type, const char* src) {
+    GLuint s = glCreateShader(type);
+    glShaderSource(s, 1, &src, nullptr);
+    glCompileShader(s);
+    GLint ok; glGetShaderiv(s, GL_COMPILE_STATUS, &ok);
+    if (!ok) {
+        GLint len; glGetShaderiv(s, GL_INFO_LOG_LENGTH, &len);
+        std::string log(len, '\0');
+        glGetShaderInfoLog(s, len, nullptr, log.data());
+        std::cerr << log << '\n';
+        glDeleteShader(s);
+        throw std::runtime_error("Shader compile failed");
+    }
+    return s;
 }
 
-Shader::Shader(const char* vertexFile, const char* fragmentFile)
+Shader::Shader(const char* vertPath, const char* fragPath)
 {
-    auto load = [&](const char* path) {
-        std::ifstream in(path); std::string s((std::istreambuf_iterator<char>(in)),
-            std::istreambuf_iterator<char>());
-        return s;
-    };
+    std::string vsrc = loadFile(vertPath);
+    std::string fsrc = loadFile(fragPath);
 
-    std::string vertCode = load(vertexFile);
-    std::string fragCode = load(fragmentFile);
-    const char* vsrc = vertCode.c_str();
-    const char* fsrc = fragCode.c_str();
+    GLuint vs = compile(GL_VERTEX_SHADER, vsrc.c_str());
+    GLuint fs = compile(GL_FRAGMENT_SHADER, fsrc.c_str());
 
-    GLuint vs = glCreateShader(GL_VERTEX_SHADER);
-    glShaderSource(vs, 1, &vsrc, nullptr);
-    glCompileShader(vs);
-    GLint ok;
-    glGetShaderiv(vs, GL_COMPILE_STATUS, &ok);
-    if (!ok) {
-        std::cerr << "--- VERTEX SHADER COMPILE ERROR ---\n";
-        printLog(vs, glGetShaderInfoLog, nullptr);
-    }
-
-    GLuint fs = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(fs, 1, &fsrc, nullptr);
-    glCompileShader(fs);
-    glGetShaderiv(fs, GL_COMPILE_STATUS, &ok);
-    if (!ok) {
-        std::cerr << "--- FRAGMENT SHADER COMPILE ERROR ---\n";
-        printLog(fs, glGetShaderInfoLog, nullptr);
-    }
-
-    ID = glCreateProgram();
-    glAttachShader(ID, vs);
-    glAttachShader(ID, fs);
-    glLinkProgram(ID);
-    glGetProgramiv(ID, GL_LINK_STATUS, &ok);
-    if (!ok) {
-        std::cerr << "--- SHADER LINK ERROR ---\n";
-        printLog(ID, glGetProgramInfoLog, nullptr);
-    }
+    id_ = glCreateProgram();
+    glAttachShader(id_, vs);
+    glAttachShader(id_, fs);
+    glLinkProgram(id_);
 
     glDeleteShader(vs);
     glDeleteShader(fs);
+
+    GLint ok; glGetProgramiv(id_, GL_LINK_STATUS, &ok);
+    if (!ok) {
+        GLint len; glGetProgramiv(id_, GL_INFO_LOG_LENGTH, &len);
+        std::string log(len, '\0');
+        glGetProgramInfoLog(id_, len, nullptr, log.data());
+        std::cerr << log << '\n';
+        glDeleteProgram(id_);
+        throw std::runtime_error("Program link failed");
+    }
 }
 
-void Shader::Activate()
-{
-	glUseProgram(this->ID);
+Shader::~Shader() { if (id_) glDeleteProgram(id_); }
+
+Shader::Shader(Shader&& rhs) noexcept
+    : id_{ std::exchange(rhs.id_, 0) }, cache_{ std::move(rhs.cache_) } {}
+
+Shader& Shader::operator=(Shader&& rhs) noexcept {
+    if (this != &rhs) {
+        if (id_) glDeleteProgram(id_);
+        id_ = std::exchange(rhs.id_, 0);
+        cache_ = std::move(rhs.cache_);
+    }
+    return *this;
 }
-void Shader::Delete()
-{
-	glDeleteProgram(this->ID);
+
+GLint Shader::loc(const std::string& n) const {
+    if (auto it = cache_.find(n); it != cache_.end())
+        return it->second;
+    GLint l = glGetUniformLocation(id_, n.c_str());
+    cache_[n] = l;
+    return l;
 }
 

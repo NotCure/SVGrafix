@@ -4,18 +4,33 @@
 #include<glad/glad.h>
 #include"VBO.h"
 
+
 class VAO
 {
 public:
-	GLuint ID;
-	VAO();
+    VAO();                                   
+    ~VAO();                                 
 
-	void LinkVBO(VBO& VBO, GLuint layout);
+    VAO(const VAO&) = delete;
+    VAO& operator=(const VAO&) = delete;
 
-	void Bind();
-	
-	void Unbind();
+    VAO(VAO&& other) noexcept;               
+    VAO& operator=(VAO&& other) noexcept;   
 
-	void Delete();
+    void   bind()   const;
+    static void unbind();
+
+    void addAttrib(GLuint index,
+        GLint  comps,
+        GLenum type,
+        GLsizei stride,
+        const void* offset);
+
+    [[nodiscard]] GLuint id() const noexcept { return id_; }
+
+private:
+    GLuint id_{ 0 };
+    void   destroy() noexcept;
 };
+
 #endif

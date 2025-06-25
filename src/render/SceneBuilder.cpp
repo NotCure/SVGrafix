@@ -2,64 +2,58 @@
 
 #include <render/SceneBuilder.h>
 #include <svg/elements/SVGRect.h>  
-#include <render/EBO.h>
-#include <render/VBO.h>
-#include <render/VAO.h>
 
 
-void SceneBuilder::build() {
+
+void SceneBuilder::build()
+{
     buckets_.clear();
-    vaos_.clear();
-    vbos_.clear();
-    ebos_.clear();
-    indexCounts_.clear();
-    fills_.clear();
+    batches_.clear();          // RAII wrappers auto-delete here
 
-
+    // ------- build CPU buckets exactly as before -------------------------
     RenderContext ctx;
-    for (auto const& childNode : dom_.root()->children) {
-        if (auto* svgEl = dynamic_cast<SVG*>(childNode->element.get())) {
-            ctx.vb = svgEl->viewbox();
+    for (auto const& child : dom_.root()->children)
+        if (auto* svg = dynamic_cast<SVG*>(child->element.get())) {
+            ctx.vb = svg->viewbox();
             break;
         }
-    }
-
     walk(dom_.root(), ctx);
+    // ---------------------------------------------------------------------
 
-
-    for (auto& [color, bucket] : buckets_) {
-        VAO vao;
+    // ------- upload each bucket to the GPU (now RAII) --------------------
+    for (auto& [color, bucket] : buckets_)
+    {
+        // create GPU buffers (constructors upload data)
         VBO vbo(bucket.verts.data(),
             bucket.verts.size() * sizeof(float));
-        EBO ebo(bucket.indices.data(),
-            bucket.indices.size() * sizeof(GLuint));\
 
+        EBO ebo{ std::span<const GLuint>(bucket.indices) };
 
-        vao.Bind();
-        vbo.Bind();
-        ebo.Bind();
+        VAO vao;
+        vao.bind();
+        vbo.bind();
+        ebo.bind();
+        vao.addAttrib(0, 3, GL_FLOAT, 0, nullptr);   // helper in new VAO
+        VAO::unbind();
 
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-        glEnableVertexAttribArray(0);
-        vao.Unbind();
-        vbo.Unbind();
-        ebo.Unbind();
-
-        vaos_.push_back(vao.ID);
-        vbos_.push_back(vbo.ID);
-        ebos_.push_back(ebo.ID);
-        indexCounts_.push_back((GLsizei)bucket.indices.size());
-        fills_.push_back(color);
+        batches_.push_back(GPUBatch{
+            std::move(vao),
+            std::move(vbo),
+            std::move(ebo),
+            static_cast<GLsizei>(bucket.indices.size()),
+            color
+            });
     }
 
-    std::cerr << "Got " << buckets_.size() << " color buckets\n";
-    for (auto const& [c, bucket] : buckets_) {
+    std::cerr << "Got " << batches_.size() << " color buckets\n";
+    for (auto const& b : batches_)
         std::cerr << "  color=("
-            << c.r << "," << c.g << "," << c.b << "," << c.a << ") "
-            << bucket.verts.size() / 3 << " verts, "
-            << bucket.indices.size() << " indices\n";
-    }
+        << b.fill.r << ',' << b.fill.g << ','
+        << b.fill.b << ',' << b.fill.a << ") "
+        << b.indexCount / 3 << " verts, "
+        << b.indexCount << " indices\n";
 }
+
 
 void SceneBuilder::walk(const SVGNode* node, RenderContext ctx) {
     auto local = dom_.stylesheet().declartions_for(*node->element);
@@ -102,13 +96,11 @@ void SceneBuilder::walk(const SVGNode* node, RenderContext ctx) {
 
 
 void SceneBuilder::draw( Shader& shader) const {
-    shader.Activate();
-    for (size_t i = 0; i < vaos_.size(); ++i) {
-        const auto& c = fills_[i];
-        shader.set_vec4("uFill", c.r, c.g, c.b, c.a);
-        glBindVertexArray(vaos_[i]);
-
-        glDrawElements(GL_TRIANGLES, indexCounts_[i], GL_UNSIGNED_INT, nullptr);
+    shader.use();                      
+    for (auto const& b : batches_) {
+        shader.setVec4("uFill", b.fill.r, b.fill.g, b.fill.b, b.fill.a);
+        b.vao.bind();
+        glDrawElements(GL_TRIANGLES, b.indexCount, GL_UNSIGNED_INT, nullptr);
     }
-    glBindVertexArray(0);
+    VAO::unbind();
 }

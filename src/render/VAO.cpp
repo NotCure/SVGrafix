@@ -1,28 +1,37 @@
 #include <render/VAO.h>
-VAO::VAO()
+
+
+VAO::VAO() { glGenVertexArrays(1, &id_); }
+
+VAO::~VAO() { destroy(); }
+
+VAO::VAO(VAO&& other) noexcept
+    : id_{ std::exchange(other.id_, 0) } {}
+
+VAO& VAO::operator=(VAO&& other) noexcept
 {
-	glGenVertexArrays(1, &ID);
+    if (this != &other) {
+        destroy();
+        id_ = std::exchange(other.id_, 0);
+    }
+    return *this;
 }
 
-void VAO::LinkVBO(VBO& VBO, GLuint layout)
+void VAO::bind()   const { glBindVertexArray(id_); }
+void VAO::unbind() { glBindVertexArray(0); }
+
+void VAO::addAttrib(GLuint index,
+    GLint comps,
+    GLenum type,
+    GLsizei stride,
+    const void* offset)
 {
-	VBO.Bind();
-	glVertexAttribPointer(layout, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
-	glEnableVertexAttribArray(layout);
-	VBO.Unbind();
+    glVertexAttribPointer(index, comps, type, GL_FALSE, stride, offset);
+    glEnableVertexAttribArray(index);
 }
 
-void VAO::Bind()
+void VAO::destroy() noexcept
 {
-	glBindVertexArray(ID);
-}
-
-void VAO::Unbind()
-{
-	glBindVertexArray(0);
-}
-
-void VAO::Delete()
-{
-	glDeleteVertexArrays(1, &ID);
+    if (id_) glDeleteVertexArrays(1, &id_);
+    id_ = 0;
 }

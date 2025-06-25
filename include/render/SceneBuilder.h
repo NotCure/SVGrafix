@@ -1,4 +1,4 @@
-#include <svg/Css.h>
+﻿#include <svg/Css.h>
 #include <svg/DomSVG.h>
 #include <utility/Color.h>
 #include <render/Shader.h>
@@ -6,26 +6,37 @@
 #include <svg/elements/SVG.h>
 #include <render/SceneTypes.h>
 
+#include <render/VBO.h>
+#include <render/EBO.h>
+#include <render/VAO.h> 
 
 
+
+struct GPUBatch          
+{
+    VAO     vao;
+    VBO     vbo;
+    EBO     ebo;
+    GLsizei indexCount;
+    Rgba    fill;        
+};
 
 class SceneBuilder {
-    public:
-        explicit SceneBuilder(const DomSVG& dom) : dom_(dom) {};
+public:
 
-        void build();
+    explicit SceneBuilder(const DomSVG& dom) : dom_(dom) {}
 
-        void draw( Shader& shader) const;
+    void build();
 
-    private:
+    void draw(Shader& shader) const;
 
-        void walk(const SVGNode* node, RenderContext ctx);
+private:
+    void walk(const SVGNode* node, RenderContext ctx);
 
-        const DomSVG& dom_;
-        std::unordered_map<Rgba, MeshBucket> buckets_;
+    const DomSVG& dom_;
 
-        std::vector<GLuint>  vaos_, vbos_, ebos_;
-        std::vector<GLsizei> indexCounts_;
-        std::vector<Rgba>   fills_;
+    std::unordered_map<Rgba, MeshBucket> buckets_;  
 
+    std::vector<GPUBatch> batches_;                  
 };
+

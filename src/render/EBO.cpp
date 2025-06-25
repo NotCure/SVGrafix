@@ -1,23 +1,27 @@
 #include <render/EBO.h>
 
-EBO::EBO(GLuint* indices, GLsizeiptr size)
+EBO::EBO() = default;
+
+EBO::~EBO() { destroy(); }
+
+EBO::EBO(EBO&& other) noexcept
+    : id_{ std::exchange(other.id_, 0) } {}
+
+EBO& EBO::operator=(EBO&& other) noexcept
 {
-	glGenBuffers(1, &ID);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ID);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, size, indices, GL_STATIC_DRAW);
+    if (this != &other) {
+        destroy();
+        id_ = std::exchange(other.id_, 0);
+    }
+    return *this;
 }
 
-void EBO::Bind()
-{
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ID);
-}
 
-void EBO::Unbind()
-{
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-}
+void EBO::bind() const { glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id_); }
+void EBO::unbind() { glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0); }
 
-void EBO::Delete()
+void EBO::destroy() noexcept
 {
-	glDeleteBuffers(1, &ID);
+    if (id_) glDeleteBuffers(1, &id_);
+    id_ = 0;
 }
