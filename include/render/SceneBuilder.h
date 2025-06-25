@@ -4,21 +4,10 @@
 #include <render/Shader.h>
 #include <utility/Mat3.h>
 #include <svg/elements/SVG.h>
+#include <render/SceneTypes.h>
 
 
 
-struct RenderContext {
-    ViewBox vb = { 0,0,1,1 };
-    Mat3 ctm = Mat3::identity();
-    std::unordered_map<std::string, std::string> style;
-};
-
-struct MeshBucket {
-    std::vector<float>  verts;   
-    std::vector<GLuint> indices; 
-    Rgba                color;   
-
-};
 
 class SceneBuilder {
     public:

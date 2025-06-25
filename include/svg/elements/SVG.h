@@ -1,8 +1,7 @@
 #pragma once
 #include <svg/SVGElement.h>
 #include <sstream>
-
-struct ViewBox { float minX{}, minY{}, width{}, height{}; };
+#include <render/SceneTypes.h>
 
 
 

@@ -169,6 +169,8 @@
     <ClCompile Include="src\svg\elements\SVGDefs.cpp" />
     <ClCompile Include="src\svg\elements\SVGGroup.cpp" />
     <ClCompile Include="src\svg\elements\SVGRect.cpp" />
+    <ClCompile Include="src\svg\style\Css.cpp" />
+    <ClCompile Include="src\svg\style\StyleSolver.cpp" />
     <ClCompile Include="src\utility\Color.cpp" />
     <ClCompile Include="src\utility\File.cpp" />
     <ClCompile Include="src\utility\Parser.cpp" />
@@ -188,6 +190,7 @@
     <Library Include="Libraries\lib\glfw3.lib" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\render\SceneTypes.h" />
     <ClInclude Include="include\svg\Css.h" />
     <ClInclude Include="include\svg\DomSVG.h" />
     <ClInclude Include="include\svg\elements\Factory.h" />
@@ -196,6 +199,8 @@
     <ClInclude Include="include\svg\elements\SVGGroup.h" />
     <ClInclude Include="include\svg\elements\SVGRect.h" />
     <ClInclude Include="include\svg\error\ParseError.h" />
+    <ClInclude Include="include\svg\style\Css.h" />
+    <ClInclude Include="include\svg\style\StyleSolver.h" />
     <ClInclude Include="include\svg\SVGNode.h" />
     <ClInclude Include="include\utility\Color.h" />
     <ClInclude Include="include\utility\File.h" />
