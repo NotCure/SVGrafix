@@ -1,4 +1,3 @@
-﻿// scene/SceneBuilder.cpp
 
 #include <render/SceneBuilder.h>
 #include <svg/elements/SVGRect.h>  
@@ -8,9 +7,8 @@
 void SceneBuilder::build()
 {
     buckets_.clear();
-    batches_.clear();          // RAII wrappers auto-delete here
+    batches_.clear();         
 
-    // ------- build CPU buckets exactly as before -------------------------
     RenderContext ctx;
     for (auto const& child : dom_.root()->children)
         if (auto* svg = dynamic_cast<SVG*>(child->element.get())) {
@@ -18,12 +16,9 @@ void SceneBuilder::build()
             break;
         }
     walk(dom_.root(), ctx);
-    // ---------------------------------------------------------------------
 
-    // ------- upload each bucket to the GPU (now RAII) --------------------
     for (auto& [color, bucket] : buckets_)
     {
-        // create GPU buffers (constructors upload data)
         VBO vbo(bucket.verts.data(),
             bucket.verts.size() * sizeof(float));
 
@@ -33,7 +28,7 @@ void SceneBuilder::build()
         vao.bind();
         vbo.bind();
         ebo.bind();
-        vao.addAttrib(0, 3, GL_FLOAT, 0, nullptr);   // helper in new VAO
+        vao.addAttrib(0, 3, GL_FLOAT, 0, nullptr);  
         VAO::unbind();
 
         batches_.push_back(GPUBatch{
